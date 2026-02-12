@@ -10,9 +10,9 @@ app.use(express.json());
 app.use("/api/messages", messageRoutes);
 
 
-app.get("/", (req, res) => {
-  res.send("Real-Time Chat Server Running 🚀");
-});
+// app.get("/", (req, res) => {
+//   res.send("Real-Time Chat Server Running 🚀");
+// });
 
 // 👇 THIS MUST EXIST
 app.use("/api/auth", authRoutes);

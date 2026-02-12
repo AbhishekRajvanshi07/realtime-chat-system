@@ -11,9 +11,8 @@
 
   <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
   <script>
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OGRiNmIzYjhiYmRjYjNmZmU4MTc0YyIsInVzZXJuYW1lIjoidXNlcjEiLCJpYXQiOjE3NzA4OTU3NTEsImV4cCI6MTc3MTUwMDU1MX0.sjdpSK590ygaRgN8qWiZD2oKimC4q69VZfEIHhUcPx4";
-
-    const socket = io("http://localhost:5001", {
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OGRkYTRiYmZhOTBiZGQ5ZDQ0YzFlZSIsInVzZXJuYW1lIjoidGVzdHVzZXIiLCJpYXQiOjE3NzA5MDQxNjksImV4cCI6MTc3MTUwODk2OX0.oujJ_I-Gfz9a2Y7ma8NGGy5tOtdQnU_FozPvbECDjxc";
+    const socket = io("https://realtime-chat-system-2.onrender.com", {
       auth: { token }
     });
 

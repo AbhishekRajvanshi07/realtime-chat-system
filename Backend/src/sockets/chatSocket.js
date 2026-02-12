@@ -26,22 +26,19 @@ module.exports = (io) => {
         message: `New message from ${senderId}`
       });
 
-      socket.on("typing", (roomId) => {
-  socket.to(roomId).emit("userTyping");
-});
-
-socket.on("stopTyping", (roomId) => {
-  socket.to(roomId).emit("userStoppedTyping");
-});
-
-
       io.to(receiverId).emit("newNotification", notification);
+    });
+
+    socket.on("typing", (roomId) => {
+      socket.to(roomId).emit("userTyping");
+    });
+
+    socket.on("stopTyping", (roomId) => {
+      socket.to(roomId).emit("userStoppedTyping");
     });
 
     socket.on("disconnect", () => {
       console.log("User disconnected:", socket.id);
     });
-
-    
   });
 };
