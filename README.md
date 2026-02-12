@@ -60,8 +60,6 @@ npm install
 npm start
 ```
 
-Backend runs on:
-`http://localhost:5001`
 
 ---
 
@@ -73,8 +71,6 @@ npm install
 npm run dev
 ```
 
-Frontend runs on:
-`http://localhost:5173`
 
 ---
 
