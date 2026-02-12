@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <h2>Real-Time Chat</h2>
+
+  <div id="chatBox" style="border:1px solid #ccc; height:300px; overflow:auto; padding:10px;"></div>
+  <div id="typing" style="color: gray;"></div>
+
+  <input id="msg" placeholder="Type message..." />
+  <button onclick="send()">Send</button>
+
+  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+  <script>
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OGRiNmIzYjhiYmRjYjNmZmU4MTc0YyIsInVzZXJuYW1lIjoidXNlcjEiLCJpYXQiOjE3NzA4OTU3NTEsImV4cCI6MTc3MTUwMDU1MX0.sjdpSK590ygaRgN8qWiZD2oKimC4q69VZfEIHhUcPx4";
+
+    const socket = io("http://localhost:5001", {
+      auth: { token }
+    });
+
+    socket.on("connect", () => {
+      console.log("Connected:", socket.id);
+      socket.emit("joinRoom", "room1");
+    });
+
+    function send() {
+      const msg = document.getElementById("msg").value;
+
+      socket.emit("sendMessage", {
+        roomId: "room1",
+        receiverId: "user2",
+        content: msg
+      });
+
+      document.getElementById("msg").value = "";
+    }
+
+    socket.on("receiveMessage", (data) => {
+      const div = document.createElement("div");
+      div.textContent = data.content;
+      document.getElementById("chatBox").appendChild(div);
+    });
+
+
+    const input = document.getElementById("msg");
+
+input.addEventListener("input", () => {
+  socket.emit("typing", "room1");
+
+  setTimeout(() => {
+    socket.emit("stopTyping", "room1");
+  }, 1000);
+});
+
+socket.on("userTyping", () => {
+  document.getElementById("typing").innerText = "Someone is typing...";
+});
+
+socket.on("userStoppedTyping", () => {
+  document.getElementById("typing").innerText = "";
+});
+
+  </script>
+</body>
+
+</html>
