@@ -43,16 +43,45 @@ MongoDB Atlas
 
 ## ⚙️ Setup
 
+### 1️⃣ Clone the Repository
+
 ```bash
-git clone https://github.com/AbhishekRajvanshi07/RealTimeChat.git
-cd RealTimeChat
+git clone https://github.com/AbhishekRajvanshi07/realtime-chat-system.git
+cd realtime-chat-system
+```
+
+---
+
+### 2️⃣ Backend Setup
+
+```bash
 cd Backend
 npm install
 npm start
-cd Frontend
+```
+
+Backend runs on:
+`http://localhost:5001`
+
+---
+
+### 3️⃣ Frontend Setup
+
+```bash
+cd ../Frontend
 npm install
 npm run dev
+```
 
-👨‍💻 Author
+Frontend runs on:
+`http://localhost:5173`
 
-Abhishek Kumar
+---
+
+## 👨‍💻 Author
+
+**Abhishek Kumar**
+B.Tech ECE | Full Stack Developer
+
+GitHub: https://github.com/AbhishekRajvanshi07
+
