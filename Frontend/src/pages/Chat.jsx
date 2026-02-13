@@ -28,7 +28,8 @@ export default function Chat() {
   const roomId = "room1";
 
   useEffect(() => {
-    const socket = io("https://realtime-chat-system-2.onrender.com", {
+    const socket = io("https://realtime-chat-riyo.onrender.com", {
+      transports: ["websocket"],
       auth: { token },
     });
 
@@ -92,9 +93,7 @@ export default function Chat() {
             <div
               key={i}
               className={`message-wrapper ${
-                m.senderId === currentUserId
-                  ? "my-message"
-                  : "other-message"
+                m.senderId === currentUserId ? "my-message" : "other-message"
               }`}
             >
               <div className="message-bubble">
