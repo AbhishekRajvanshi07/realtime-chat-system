@@ -1,6 +1,7 @@
 import { useState } from "react";
 import API from "../api/axios";
 import { useNavigate, Link } from "react-router-dom";
+import "./Auth.css";
 
 export default function Register() {
   const [form, setForm] = useState({
@@ -9,64 +10,71 @@ export default function Register() {
     password: "",
   });
 
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
-      const res = await API.post("/auth/register", form);
-
-      alert("Registered Successfully");
+      await API.post("/auth/register", form);
+      alert("Registered Successfully ✅");
       navigate("/");
     } catch (err) {
-      console.log(err.response?.data);
-      alert(err.response?.data?.message || "Registration failed");
+      alert(err.response?.data?.message || "Registration failed ❌");
     }
+
+    setLoading(false);
   };
 
   return (
-    <div style={{ padding: 40 }}>
-      <h2>Register</h2>
+    <div className="auth-container">
+      <div className="auth-left">
+        <h1>ChatBook</h1>
+        <p>Connect and chat with people in real-time.</p>
+      </div>
 
-      <form onSubmit={handleSubmit}>
-        <input
-          name="username"
-          placeholder="Username"
-          value={form.username}
-          onChange={(e) =>
-            setForm({ ...form, username: e.target.value })
-          }
-        />
-        <br /><br />
+      <div className="auth-card">
+        <h2>Create Account</h2>
 
-        <input
-          name="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={(e) =>
-            setForm({ ...form, email: e.target.value })
-          }
-        />
-        <br /><br />
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            placeholder="Username"
+            required
+            onChange={(e) =>
+              setForm({ ...form, username: e.target.value })
+            }
+          />
 
-        <input
-          name="password"
-          type="password"
-          placeholder="Password"
-          value={form.password}
-          onChange={(e) =>
-            setForm({ ...form, password: e.target.value })
-          }
-        />
-        <br /><br />
+          <input
+            type="email"
+            placeholder="Email"
+            required
+            onChange={(e) =>
+              setForm({ ...form, email: e.target.value })
+            }
+          />
 
-        <button type="submit">Register</button>
-      </form>
+          <input
+            type="password"
+            placeholder="Password"
+            required
+            onChange={(e) =>
+              setForm({ ...form, password: e.target.value })
+            }
+          />
 
-      <p>
-        Already have account? <Link to="/">Login</Link>
-      </p>
+          <button type="submit" disabled={loading}>
+            {loading ? "Creating..." : "Sign Up"}
+          </button>
+        </form>
+
+        <p>
+          Already have an account? <Link to="/">Login</Link>
+        </p>
+      </div>
     </div>
   );
 }
