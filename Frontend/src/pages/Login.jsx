@@ -3,56 +3,61 @@ import API from "../api/axios";
 import { useNavigate, Link } from "react-router-dom";
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+  });
+
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
 
     try {
-      const res = await API.post("/auth/login", { email, password });
+      const res = await API.post("/auth/login", form);
+
       localStorage.setItem("token", res.data.token);
+
+      alert("Login successful");
       navigate("/chat");
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed.");
+      console.log(err.response?.data);
+      alert(err.response?.data?.message || "Login failed");
     }
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <h2>Welcome Back 👋</h2>
-        <p className="subtitle">Login to continue chatting</p>
+    <div style={{ padding: 40 }}>
+      <h2>Login</h2>
 
-        {error && <p className="error">{error}</p>}
+      <form onSubmit={handleSubmit}>
+        <input
+          name="email"
+          placeholder="Email"
+          value={form.email}
+          onChange={(e) =>
+            setForm({ ...form, email: e.target.value })
+          }
+        />
+        <br /><br />
 
-        <form onSubmit={handleLogin}>
-          <input
-            type="email"
-            placeholder="Email address"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+        <input
+          name="password"
+          type="password"
+          placeholder="Password"
+          value={form.password}
+          onChange={(e) =>
+            setForm({ ...form, password: e.target.value })
+          }
+        />
+        <br /><br />
 
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+        <button type="submit">Login</button>
+      </form>
 
-          <button type="submit">Login</button>
-        </form>
-
-        <p className="switch">
-          Don’t have an account? <Link to="/register">Register</Link>
-        </p>
-      </div>
+      <p>
+        Don't have account? <Link to="/register">Register</Link>
+      </p>
     </div>
   );
 }
