@@ -4,20 +4,29 @@ import { useNavigate, Link } from "react-router-dom";
 
 export default function Register() {
   const [form, setForm] = useState({
-    username: "",
+    name: "",
     email: "",
     password: "",
   });
 
   const navigate = useNavigate();
 
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      await API.post("/auth/register", form);
+      await API.post("/api/auth/register", form);
       alert("Registered Successfully");
       navigate("/");
-    } catch {
+    } catch (err) {
+      console.error(err.response?.data || err.message);
       alert("Registration failed");
     }
   };
@@ -25,34 +34,40 @@ export default function Register() {
   return (
     <div style={{ padding: 40 }}>
       <h2>Register</h2>
+
       <form onSubmit={handleSubmit}>
         <input
-          name="username"
+          name="name"
           placeholder="Username"
-          onChange={(e) =>
-            setForm({ ...form, username: e.target.value })
-          }
+          value={form.name}
+          onChange={handleChange}
+          required
         />
         <br /><br />
+
         <input
           name="email"
           placeholder="Email"
-          onChange={(e) =>
-            setForm({ ...form, email: e.target.value })
-          }
+          type="email"
+          value={form.email}
+          onChange={handleChange}
+          required
         />
         <br /><br />
+
         <input
           name="password"
           type="password"
           placeholder="Password"
-          onChange={(e) =>
-            setForm({ ...form, password: e.target.value })
-          }
+          value={form.password}
+          onChange={handleChange}
+          required
         />
         <br /><br />
+
         <button type="submit">Register</button>
       </form>
+
       <p>
         Already have account? <Link to="/">Login</Link>
       </p>
