@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://realtime-chat-system-2.onrender.com/api",
+  baseURL: "https://realtime-chat-riyo.onrender.com",
 });
 
 export default API;
