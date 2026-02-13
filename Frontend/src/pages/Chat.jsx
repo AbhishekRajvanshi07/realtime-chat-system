@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { io } from "socket.io-client";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
+import "./Chat.css";
 
 export default function Chat() {
   const [message, setMessage] = useState("");
@@ -13,14 +14,9 @@ export default function Chat() {
 
   const token = localStorage.getItem("token");
 
-  // 🔐 Redirect if no token
-  useEffect(() => {
-    if (!token) {
-      navigate("/");
-    }
-  }, [token, navigate]);
-
-  if (!token) return null;
+  if (!token) {
+    navigate("/");
+  }
 
   const decoded = jwtDecode(token);
   const currentUserId = decoded.id;
@@ -29,7 +25,6 @@ export default function Chat() {
 
   useEffect(() => {
     const socket = io("https://realtime-chat-riyo.onrender.com", {
-      transports: ["websocket"],
       auth: { token },
     });
 
@@ -41,12 +36,12 @@ export default function Chat() {
     });
 
     socket.on("userTyping", () => {
-      setTyping("User is typing...");
+      setTyping("Typing...");
       setTimeout(() => setTyping(""), 2000);
     });
 
     return () => socket.disconnect();
-  }, [token]);
+  }, []);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -65,56 +60,48 @@ export default function Chat() {
     setMessage("");
   };
 
-  const handleTyping = () => {
-    socketRef.current.emit("typing", roomId);
-  };
-
-  const handleLogout = () => {
+  const logout = () => {
     localStorage.removeItem("token");
-    socketRef.current?.disconnect();
     navigate("/");
   };
 
   return (
-    <div className="chat-container">
-      <div className="chat-card">
+    <div className="chat-page">
+      <div className="chat-wrapper">
         <div className="chat-header">
-          <h2>Realtime Chat</h2>
-          <div className="header-right">
-            <span className="username">{username}</span>
-            <button className="logout-btn" onClick={handleLogout}>
-              Logout
-            </button>
+          <div>
+            <h3>Realtime Chat</h3>
+            <span>{username}</span>
           </div>
+          <button onClick={logout}>Logout</button>
         </div>
 
-        <div className="messages">
+        <div className="chat-messages">
           {messages.map((m, i) => (
             <div
               key={i}
-              className={`message-wrapper ${
-                m.senderId === currentUserId ? "my-message" : "other-message"
+              className={`message ${
+                m.senderId === currentUserId
+                  ? "sent"
+                  : "received"
               }`}
             >
-              <div className="message-bubble">
-                <small>
-                  {m.senderId === currentUserId ? "You" : m.senderId}
-                </small>
-                <p>{m.content}</p>
+              <div className="bubble">
+                {m.content}
               </div>
             </div>
           ))}
 
-          {typing && <p className="typing">{typing}</p>}
+          {typing && <div className="typing">{typing}</div>}
           <div ref={bottomRef} />
         </div>
 
-        <div className="input-area">
+        <div className="chat-input">
           <input
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            onKeyDown={handleTyping}
             placeholder="Type a message..."
+            onKeyDown={(e) => e.key === "Enter" && sendMessage()}
           />
           <button onClick={sendMessage}>Send</button>
         </div>
