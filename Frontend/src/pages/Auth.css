@@ -63,3 +63,22 @@
   margin-top: 15px;
   text-align: center;
 }
+
+
+.login-text {
+  margin-top: 15px;
+  font-size: 14px;
+  color: black;
+  text-align: center;
+}
+
+.login-link {
+  color: black;
+  font-weight: 600;
+  text-decoration: none;
+  margin-left: 4px;
+}
+
+.login-link:hover {
+  text-decoration: underline;
+}

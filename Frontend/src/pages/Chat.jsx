@@ -2,25 +2,23 @@ import { useEffect, useState, useRef } from "react";
 import { io } from "socket.io-client";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
+import "../App.css";
 import "./Chat.css";
+
 
 export default function Chat() {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
-  const [typing, setTyping] = useState("");
   const socketRef = useRef(null);
   const bottomRef = useRef(null);
   const navigate = useNavigate();
 
   const token = localStorage.getItem("token");
-
-  if (!token) {
-    navigate("/");
-  }
-
   const decoded = jwtDecode(token);
+
   const currentUserId = decoded.id;
   const username = decoded.username;
+
   const roomId = "room1";
 
   useEffect(() => {
@@ -33,11 +31,6 @@ export default function Chat() {
 
     socket.on("receiveMessage", (data) => {
       setMessages((prev) => [...prev, data]);
-    });
-
-    socket.on("userTyping", () => {
-      setTyping("Typing...");
-      setTimeout(() => setTyping(""), 2000);
     });
 
     return () => socket.disconnect();
@@ -53,59 +46,60 @@ export default function Chat() {
     socketRef.current.emit("sendMessage", {
       roomId,
       senderId: currentUserId,
-      receiverId: "receiver-temp",
+      receiverId: "temp",
       content: message,
     });
 
     setMessage("");
   };
 
-  const logout = () => {
+  const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/");
   };
 
   return (
-    <div className="chat-page">
-      <div className="chat-wrapper">
-        <div className="chat-header">
-          <div>
-            <h3>Realtime Chat</h3>
-            <span>{username}</span>
+    <div className="chat-wrapper">
+
+      {/* HEADER */}
+      <div className="chat-header">
+        <div className="chat-user">
+          <div className="avatar">
+            {username.charAt(0).toUpperCase()}
           </div>
-          <button onClick={logout}>Logout</button>
+          <span>{username}</span>
         </div>
-
-        <div className="chat-messages">
-          {messages.map((m, i) => (
-            <div
-              key={i}
-              className={`message ${
-                m.senderId === currentUserId
-                  ? "sent"
-                  : "received"
-              }`}
-            >
-              <div className="bubble">
-                {m.content}
-              </div>
-            </div>
-          ))}
-
-          {typing && <div className="typing">{typing}</div>}
-          <div ref={bottomRef} />
-        </div>
-
-        <div className="chat-input">
-          <input
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder="Type a message..."
-            onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-          />
-          <button onClick={sendMessage}>Send</button>
-        </div>
+        <button className="logout-btn" onClick={handleLogout}>
+          Logout
+        </button>
       </div>
+
+      {/* MESSAGES */}
+      <div className="chat-body">
+        {messages.map((m, i) => (
+          <div
+            key={i}
+            className={`message ${
+              m.senderId === currentUserId ? "sent" : "received"
+            }`}
+          >
+            {m.content}
+          </div>
+        ))}
+        <div ref={bottomRef} />
+      </div>
+
+      {/* INPUT */}
+      <div className="chat-input">
+        <input
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          placeholder="Type a message..."
+          onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+        />
+        <button onClick={sendMessage}>Send</button>
+      </div>
+
     </div>
   );
 }
