@@ -4,8 +4,7 @@ A scalable full-stack real-time chat application built with Node.js, Express, So
 Deployed as a single full-stack service on Render.
 
 🔗 **Live App:**  
-https://realtime-chat-system-2.onrender.com
-
+https://realtime-chat-system-frontend.onrender.com
 ---
 
 ## 🛠 Tech Stack
